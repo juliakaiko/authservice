@@ -1,6 +1,5 @@
 package com.mymicroservice.authservice.dto;
 
-import com.mymicroservice.authservice.model.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +23,4 @@ public class AuthRequest {
     @NotBlank (message = "Password may not be blank")
     @Size(min=5, max=255, message = "Password size must be between 5 and 255")
     private String password;
-
-    private Role role;
 }

@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 @RequiredArgsConstructor
-public enum Role implements GrantedAuthority{ // GrantedAuthority - это полномочия, которые предоставляются пользователю
-
+public enum Role implements GrantedAuthority{
     USER ("USER"),
     ADMIN("ADMIN");
 

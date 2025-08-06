@@ -16,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,6 +31,15 @@ public class UserCredential implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long userId;
+
+    @Column(name="name")
+    private String name;
+
+    @Column(name="surname")
+    private String surname;
+
+    @Column(name="birth_date")
+    private LocalDate birthDate;
 
     @Column(name="email")
     private String email;

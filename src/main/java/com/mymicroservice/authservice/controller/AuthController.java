@@ -3,6 +3,7 @@ package com.mymicroservice.authservice.controller;
 import com.mymicroservice.authservice.dto.AuthRequest;
 import com.mymicroservice.authservice.dto.AuthResponse;
 import com.mymicroservice.authservice.dto.RefreshTokenRequest;
+import com.mymicroservice.authservice.dto.UserRegistrationRequest;
 import com.mymicroservice.authservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,7 +32,7 @@ public class AuthController {
 
     @Operation(summary = "Register new user", description = "Save user credentials and create tokens")
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody @Valid AuthRequest request) {
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid UserRegistrationRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
@@ -52,14 +53,5 @@ public class AuthController {
     public ResponseEntity<Boolean> validate(@Parameter(description = "JWT token (without 'Bearer')", required = true, example = "eyJhbGciOiJ...")
                                             @RequestParam String token) {
         return ResponseEntity.ok(authService.validateToken(token));
-       /* String token = tokenHeader.replace("Bearer ", "").trim();
-        return ResponseEntity.ok(authService.validateToken(token));*/
-
-        /*
-        @PostMapping("/validate")
-        public ResponseEntity<Boolean> validate(@RequestHeader("Authorization") String token) {
-            String jwt = token.replace("Bearer ", "").trim();
-            return ResponseEntity.ok(authService.validateToken(jwt));
-        } */
     }
 }
