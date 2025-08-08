@@ -9,9 +9,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.annotation.PostConstruct;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
@@ -39,8 +43,8 @@ public class JwtService  {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private static final String PRIVATE_KEY_PATH = "src/main/resources/keys/private.pem";
-    private static final String PUBLIC_KEY_PATH = "src/main/resources/keys/public.pem";
+    private static final String PRIVATE_KEY_PATH = "keys/private.pem"; //src/main/resources/
+    private static final String PUBLIC_KEY_PATH = "keys/public.pem"; // src/main/resources/
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
@@ -155,7 +159,38 @@ public class JwtService  {
         return claims.getSubject();
     }
 
-    private PrivateKey loadPrivateKey(String filepath) {
+    private PrivateKey loadPrivateKey(String classpathPath) {
+        try (InputStream inputStream = new ClassPathResource(classpathPath).getInputStream()) {
+            String key = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8)
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace("-----END PRIVATE KEY-----", "")
+                    .replaceAll("\\s+", "");
+
+            byte[] keyBytes = Base64.getDecoder().decode(key);
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+            return KeyFactory.getInstance("RSA").generatePrivate(spec);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load private key from: " + classpathPath, e);
+        }
+    }
+
+    private PublicKey loadPublicKey(String classpathPath) {
+        try (InputStream inputStream = new ClassPathResource(classpathPath).getInputStream()) {
+            String key = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8)
+                    .replace("-----BEGIN PUBLIC KEY-----", "")
+                    .replace("-----END PUBLIC KEY-----", "")
+                    .replaceAll("\\s+", "");
+
+            byte[] keyBytes = Base64.getDecoder().decode(key);
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+            return KeyFactory.getInstance("RSA").generatePublic(spec);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load public key from: " + classpathPath, e);
+        }
+    }
+
+
+  /*  private PrivateKey loadPrivateKey(String filepath) {
         try {
             String key = new String(Files.readAllBytes(Paths.get(filepath)))
                     .replace("-----BEGIN PRIVATE KEY-----", "")
@@ -183,5 +218,5 @@ public class JwtService  {
         } catch (Exception e) {
             throw new RuntimeException("Failed to load public key", e);
         }
-    }
+    }*/
 }

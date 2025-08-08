@@ -45,15 +45,6 @@ public class AuthControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("GET /auth/ should return User-Agent")
-    void helloShouldReturnUserAgent() throws Exception {
-        mockMvc.perform(get("/auth/")
-                        .header("User-Agent", "JUnit-Agent"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("JUnit-Agent")));
-    }
-
-    @Test
     @DisplayName("POST /auth/register should return AuthResponse")
     void registerShouldReturnAuthResponse() throws Exception {
         UserCredential userCredential = UserCredentialGenerator.generateUser();

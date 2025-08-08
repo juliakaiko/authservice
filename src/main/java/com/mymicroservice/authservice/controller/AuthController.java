@@ -25,12 +25,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/")
-    public ResponseEntity<String> hello(@RequestHeader("User-Agent") String userAgent) {
-        return ResponseEntity.ok("Ваш User-Agent: " + userAgent);
-    }
-
-    @Operation(summary = "Register new user", description = "Save user credentials and create tokens")
+    @Operation(summary = "Register a new user", description = "Save user credentials and create tokens")
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid UserRegistrationRequest request) {
         return ResponseEntity.ok(authService.register(request));
