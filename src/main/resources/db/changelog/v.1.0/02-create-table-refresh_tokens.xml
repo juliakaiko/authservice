@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+      http://www.liquibase.org/xml/ns/pro
+      http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+
+    <changeSet id="refresh_tokens_create-table_2" author="julia_kaiko">
+        <preConditions>
+            <not>
+                <tableExists tableName="refresh_tokens"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="refresh_tokens">
+            <column name="token_id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_email" type="character varying (200)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="refresh_token" type="character varying(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="issued_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expires_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="refresh_tokens"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
