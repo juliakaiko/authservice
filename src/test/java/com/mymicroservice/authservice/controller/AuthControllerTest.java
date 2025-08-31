@@ -6,9 +6,9 @@ import com.mymicroservice.authservice.dto.AuthRequest;
 import com.mymicroservice.authservice.dto.AuthResponse;
 import com.mymicroservice.authservice.dto.RefreshTokenRequest;
 import com.mymicroservice.authservice.dto.UserRegistrationRequest;
+import com.mymicroservice.authservice.filter.GatewayAuthFilter;
 import com.mymicroservice.authservice.mapper.UserCredentialMapper;
 import com.mymicroservice.authservice.model.UserCredential;
-import com.mymicroservice.authservice.security.JwtAuthFilter;
 import com.mymicroservice.authservice.service.AuthService;
 import com.mymicroservice.authservice.util.UserCredentialGenerator;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -39,7 +38,7 @@ public class AuthControllerTest {
     private AuthService authService;
 
     @MockBean
-    private JwtAuthFilter jwtAuthFilter;
+    private GatewayAuthFilter gatewayAuthFilter;
 
     @Autowired
     private ObjectMapper objectMapper;

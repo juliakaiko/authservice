@@ -16,8 +16,6 @@ import jakarta.annotation.PostConstruct;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -43,8 +41,8 @@ public class JwtService  {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private static final String PRIVATE_KEY_PATH = "keys/private.pem"; //src/main/resources/
-    private static final String PUBLIC_KEY_PATH = "keys/public.pem"; // src/main/resources/
+    private static final String PRIVATE_KEY_PATH = "keys/private.pem";
+    private static final String PUBLIC_KEY_PATH = "keys/public.pem";
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
@@ -189,34 +187,4 @@ public class JwtService  {
         }
     }
 
-
-  /*  private PrivateKey loadPrivateKey(String filepath) {
-        try {
-            String key = new String(Files.readAllBytes(Paths.get(filepath)))
-                    .replace("-----BEGIN PRIVATE KEY-----", "")
-                    .replace("-----END PRIVATE KEY-----", "")
-                    .replaceAll("\\s+", "");
-
-            byte[] keyBytes = Base64.getDecoder().decode(key);
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            return KeyFactory.getInstance("RSA").generatePrivate(spec);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load private key", e);
-        }
-    }
-
-    private PublicKey loadPublicKey(String filepath) {
-        try {
-            String key = new String(Files.readAllBytes(Paths.get(filepath)))
-                    .replace("-----BEGIN PUBLIC KEY-----", "")
-                    .replace("-----END PUBLIC KEY-----", "")
-                    .replaceAll("\\s+", "");
-
-            byte[] keyBytes = Base64.getDecoder().decode(key);
-            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-            return KeyFactory.getInstance("RSA").generatePublic(spec);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load public key", e);
-        }
-    }*/
 }

@@ -1,6 +1,5 @@
 package com.mymicroservice.authservice.service.impl;
 
-import com.mymicroservice.authservice.client.UserClient;
 import com.mymicroservice.authservice.dto.AuthRequest;
 import com.mymicroservice.authservice.dto.AuthResponse;
 import com.mymicroservice.authservice.dto.RefreshTokenRequest;
@@ -10,7 +9,6 @@ import com.mymicroservice.authservice.mapper.UserCredentialMapper;
 import com.mymicroservice.authservice.model.Role;
 import com.mymicroservice.authservice.model.UserCredential;
 import com.mymicroservice.authservice.repositiry.UserCredentialRepository;
-import com.mymicroservice.authservice.security.AccessTokenProvider;
 import com.mymicroservice.authservice.service.JwtService;
 import com.mymicroservice.authservice.util.UserCredentialGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,10 +47,6 @@ public class AuthServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private JwtService jwtService;
-    @Mock
-    private UserClient userClient;
-    @Mock
-    private AccessTokenProvider accessTokenProvider;
 
     private UserCredential testUser;
     private UserRegistrationRequest registrationRequest;
@@ -94,9 +88,6 @@ public class AuthServiceImplTest {
         verify(jwtService).generateAccessToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).generateRefreshToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).saveRefreshToken("refreshToken");
-        verify(userClient).createUser(any(UserRegistrationRequest.class));
-        verify(accessTokenProvider).setAccessToken("accessToken");
-        verify(accessTokenProvider).clear();
     }
 
     @Test
@@ -144,8 +135,6 @@ public class AuthServiceImplTest {
         verify(jwtService).generateAccessToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).generateRefreshToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).saveRefreshToken("refreshToken");
-        verify(accessTokenProvider).setAccessToken("accessToken");
-        verify(accessTokenProvider).clear();
     }
 
     @Test
@@ -185,8 +174,6 @@ public class AuthServiceImplTest {
         verify(jwtService).generateAccessToken(testUser.getUsername(), List.of());
         verify(jwtService).generateRefreshToken(testUser.getUsername(), List.of());
         verify(jwtService).saveRefreshToken("newRefreshToken");
-        verify(accessTokenProvider).setAccessToken("newAccessToken");
-        verify(accessTokenProvider).clear();
     }
 
     // Validate Token Tests
