@@ -1,9 +1,9 @@
-# ignore
+# ignore build and IDE files
 target/
 .idea/
 *.iml
 .vscode/
 
-# allow you to copy keys
-!src/main/resources/keys/*.pem
+# include all keys
+!src/main/resources/keys/
 !target/authservice-0.0.1-SNAPSHOT.jar
