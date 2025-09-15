@@ -1,0 +1,9 @@
+# ignore
+target/
+.idea/
+*.iml
+.vscode/
+
+# allow you to copy keys
+!src/main/resources/keys/*.pem
+!target/authservice-0.0.1-SNAPSHOT.jar
