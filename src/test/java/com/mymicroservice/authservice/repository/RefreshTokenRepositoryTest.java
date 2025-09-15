@@ -65,6 +65,7 @@ public class RefreshTokenRepositoryTest extends AbstractContainerTest {
     public void deleteByUserEmail_shouldDeleteRefreshToken() {
         refreshTokenRepository.deleteRefreshTokenByUserEmailIgnoreCase(expectedRefreshToken.getUserEmail());
         log.info("Test to delete the RefreshToken by user_email: {} " + expectedRefreshToken.getUserEmail());
+
         Optional<RefreshToken> actualRefreshToken = refreshTokenRepository.findByUserEmailIgnoreCase(
                 expectedRefreshToken.getUserEmail());
 
