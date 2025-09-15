@@ -78,14 +78,21 @@ jobs:
             -Dsonar.java.binaries=target/classes
             -Dsonar.java.libraries=target/unpacked-libs/*.jar
 
-      # 9. Log in to Docker Hub
+      # 9. Create keys for Docker build
+      - name: Create keys
+        run: |
+          mkdir -p src/main/resources/keys
+          echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.pem
+          echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.pem
+
+      # 10. Log in to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN_FOR_AUTHSERVICE }}
 
-      # 10. Build and push Docker image (using local Docker socket)
+      # 11. Build and push Docker image (using local Docker socket)
       - name: Build and Push Docker Image
         if: success()
         run: |
