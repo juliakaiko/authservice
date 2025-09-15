@@ -26,6 +26,10 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<org.testcontainers.version>1.19.8</org.testcontainers.version>
+		<sonar.organization>juliakaiko</sonar.organization>
+		<sonar.projectKey>juliakaiko_authservice</sonar.projectKey>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.java.binaries>target/classes</sonar.java.binaries>
 	</properties>
 	<dependencies>
 		<dependency>
