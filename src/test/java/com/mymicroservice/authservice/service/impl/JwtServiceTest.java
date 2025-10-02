@@ -52,7 +52,7 @@ public class JwtServiceTest {
         privateKey = keyPair.getPrivate();
         publicKey = keyPair.getPublic();
 
-        // Устанавливаем ключи вручную
+        // Installing the keys manually
         var privateField = JwtService.class.getDeclaredField("privateKey");
         var publicField = JwtService.class.getDeclaredField("publicKey");
         privateField.setAccessible(true);
@@ -60,7 +60,7 @@ public class JwtServiceTest {
         privateField.set(jwtService, privateKey);
         publicField.set(jwtService, publicKey);
 
-        // Устанавливаем значения expiration вручную
+        // Setting the expiration values manually
         var expirationField = JwtService.class.getDeclaredField("jwtExpiration");
         expirationField.setAccessible(true);
         expirationField.set(jwtService, Duration.ofMinutes(15));

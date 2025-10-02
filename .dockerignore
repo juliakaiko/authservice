@@ -1,0 +1,9 @@
+# ignore build and IDE files
+target/
+.idea/
+*.iml
+.vscode/
+
+# include all keys
+!src/main/resources/keys/**
+!target/authservice-0.0.1-SNAPSHOT.jar

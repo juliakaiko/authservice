@@ -1,12 +1,14 @@
 # AuthenticationService  
-A secure authentication microservice built on Spring Boot 3.3.4 with JWT (RSA) and Feign client integration.
+A secure authentication microservice built on Spring Boot 3.3.4 with JWT (RSA).
 
 ## 🚀 Key Features  
-Authentication microservice that provides user login, token issuance (JWT), validation, refreshing, and credential management. Designed to integrate with other services, especially for authorizing access in a UserService.
+Authentication microservice that provides user login, token issuance (JWT), validation, refreshing, and credential management. 
 
 🚀 Features
 - Login via login/password
-- Generate JWT tokens (Access + Refresh) using RSA-2048 keys
+- Generate JWT tokens (Access + Refresh) using JWS with RS256 — a digital signature scheme combining:
+  - RSA (asymmetric cryptography) for signing with a private key and verification with a public key. 
+  - SHA-256 (hashing) for integrity checks.
 - Validate tokens
 - Refresh tokens
 - JWT-based authorization
@@ -28,14 +30,9 @@ Authentication microservice that provides user login, token issuance (JWT), vali
 - PostgreSQL 
 - MapStruct (DTO mapping)
 - Lombok (reducing boilerplate code)
-- Feign Client for service-to-service communication
 - SpringDoc OpenAPI (API documentation)
 - BCrypt for password hashing
 - Docker for containerization
-
-## 🔗 Service Integration
-- Automatic user data propagation on registration 
-- Feign client endpoint: https://github.com/juliakaiko/userservice
 
 ## 📩 Contacts
 **Author:** Yuliya Kaiko

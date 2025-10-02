@@ -1,11 +1,13 @@
 package com.mymicroservice.authservice.advice;
 
 import com.mymicroservice.authservice.exception.InvalidCredentialsException;
+import com.mymicroservice.authservice.exception.UserCredentialNotFoundException;
 import com.mymicroservice.authservice.util.ErrorItem;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,15 +61,52 @@ public class GlobalAdvice {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
-    //org.postgresql.util.PSQLException: ОШИБКА: нулевое значение в столбце "role" нарушает ограничение NOT NULL
+    /**
+     * Handles data integrity violation exceptions, for example,
+     * when attempting to save a duplicate unique field (such as email),
+     * NOT NULL constraint violations and etc.
+     *
+     * @param e the DataIntegrityViolationException to handle
+     * @return ResponseEntity containing error information with BAD_REQUEST status
+     */
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<ErrorItem> handleBadCredentialsException(DataIntegrityViolationException e) {
         ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles {@link HttpMessageNotReadableException} which occurs when HTTP request body
+     * cannot be properly parsed or converted to the expected Java object.
+     *
+     * <p>This typically happens when:
+     * <ul>
+     *   <li>Malformed JSON syntax in request body</li>
+     *   <li>Type mismatch between JSON values and target Java types</li>
+     *   <li>Invalid enum values that cannot be converted to the target enum type</li>
+     *   <li>Missing required fields in JSON payload</li>
+     * </ul>
+     *
+     * @param e the HttpMessageNotReadableException that was thrown during request processing
+     * @return ResponseEntity containing ErrorItem with details about the parsing error
+     * @see org.springframework.http.converter.HttpMessageNotReadableException
+     * @see org.springframework.http.HttpStatus#BAD_REQUEST
+     * @since 1.0
+     */
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ResponseEntity<ErrorItem> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({UsernameNotFoundException.class})
     public ResponseEntity<ErrorItem> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UserCredentialNotFoundException.class})
+    public ResponseEntity<ErrorItem> handleUserCredentialNotFoundException(UserCredentialNotFoundException e) {
         ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

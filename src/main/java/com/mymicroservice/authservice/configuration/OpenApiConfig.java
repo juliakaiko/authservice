@@ -23,7 +23,7 @@ public class OpenApiConfig {
                 .components(new Components().addSecuritySchemes
                         ("Bearer Authentication", createAPIKeyScheme()))
                 .info(new Info().title("Authentication Service API")
-                        .description("Authentication Service for UserService"));
+                        .description("Authentication Service provides user login, token issuance (JWT), its validation and refreshing"));
     }
 
     private SecurityScheme createAPIKeyScheme() {

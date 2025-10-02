@@ -1,35 +1,35 @@
 package com.mymicroservice.authservice.service.impl;
 
-import com.mymicroservice.authservice.client.UserClient;
 import com.mymicroservice.authservice.dto.AuthRequest;
 import com.mymicroservice.authservice.dto.AuthResponse;
 import com.mymicroservice.authservice.dto.RefreshTokenRequest;
 import com.mymicroservice.authservice.dto.UserRegistrationRequest;
 import com.mymicroservice.authservice.exception.InvalidCredentialsException;
+import com.mymicroservice.authservice.exception.UserCredentialNotFoundException;
 import com.mymicroservice.authservice.mapper.UserCredentialMapper;
 import com.mymicroservice.authservice.model.Role;
 import com.mymicroservice.authservice.model.UserCredential;
-import com.mymicroservice.authservice.security.AccessTokenProvider;
 import com.mymicroservice.authservice.service.JwtService;
 import com.mymicroservice.authservice.repositiry.UserCredentialRepository;
 import com.mymicroservice.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
     private final UserCredentialRepository userCredentialRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final UserClient userClient;
-    private final AccessTokenProvider accessTokenProvider;
 
     @Override
     @Transactional
@@ -59,18 +59,8 @@ public class AuthServiceImpl implements AuthService {
         userCredentialRepository.save(user);
 
         String access = jwtService.generateAccessToken(user.getUsername(), List.of(user.getRole().getAuthority()));
-        accessTokenProvider.setAccessToken(access); // add accessToken в ThreadLocal
-
         String refresh = jwtService.generateRefreshToken(user.getUsername(), List.of(user.getRole().getAuthority()));
         jwtService.saveRefreshToken(refresh); // save refreshToken in DB
-
-        // create User in userservice + Feign client adds Authorization header automaticaly
-        UserRegistrationRequest dto = request;
-        dto.setPassword(user.getPassword());
-        dto.setRole(user.getRole());
-        userClient.createUser(dto);
-
-        accessTokenProvider.clear(); // clear ThreadLocal
 
         return new AuthResponse(access, refresh);
     }
@@ -87,12 +77,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String access = jwtService.generateAccessToken(user.getUsername(), List.of(user.getRole().getAuthority()));
-        accessTokenProvider.setAccessToken(access); // add accessToken in ThreadLocal
-
         String refresh = jwtService.generateRefreshToken(user.getUsername(), List.of(user.getRole().getAuthority()));
         jwtService.saveRefreshToken(refresh); // save refreshToken in DB
-
-        accessTokenProvider.clear(); // clear ThreadLocal
 
         return new AuthResponse(access, refresh);
     }
@@ -104,12 +90,8 @@ public class AuthServiceImpl implements AuthService {
         jwtService.deleteRefreshTokenByUserEmail(username);
 
         String access = jwtService.generateAccessToken(username, roles);
-        accessTokenProvider.setAccessToken(access);
-
         String refresh = jwtService.generateRefreshToken(username, roles);
         jwtService.saveRefreshToken(refresh);
-
-        accessTokenProvider.clear(); // clear ThreadLocal
 
         return new AuthResponse(access, refresh);
     }
@@ -119,4 +101,12 @@ public class AuthServiceImpl implements AuthService {
         return jwtService.isTokenValid(token);
     }
 
+    @Override
+    @Transactional
+    public void deleteUserCredential(Long userId) {
+        Optional<UserCredential> userFromDb = Optional.ofNullable(userCredentialRepository.findById(userId)
+                .orElseThrow(() -> new UserCredentialNotFoundException("UserCredential wasn't found with id " + userId)));
+        userCredentialRepository.deleteById(userId);
+        log.info("deleteUserCredential(): {}", userFromDb);
+    }
 }

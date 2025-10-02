@@ -1,16 +1,15 @@
 package com.mymicroservice.authservice.service.impl;
 
-import com.mymicroservice.authservice.client.UserClient;
 import com.mymicroservice.authservice.dto.AuthRequest;
 import com.mymicroservice.authservice.dto.AuthResponse;
 import com.mymicroservice.authservice.dto.RefreshTokenRequest;
 import com.mymicroservice.authservice.dto.UserRegistrationRequest;
 import com.mymicroservice.authservice.exception.InvalidCredentialsException;
+import com.mymicroservice.authservice.exception.UserCredentialNotFoundException;
 import com.mymicroservice.authservice.mapper.UserCredentialMapper;
 import com.mymicroservice.authservice.model.Role;
 import com.mymicroservice.authservice.model.UserCredential;
 import com.mymicroservice.authservice.repositiry.UserCredentialRepository;
-import com.mymicroservice.authservice.security.AccessTokenProvider;
 import com.mymicroservice.authservice.service.JwtService;
 import com.mymicroservice.authservice.util.UserCredentialGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +33,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,10 +49,6 @@ public class AuthServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private JwtService jwtService;
-    @Mock
-    private UserClient userClient;
-    @Mock
-    private AccessTokenProvider accessTokenProvider;
 
     private UserCredential testUser;
     private UserRegistrationRequest registrationRequest;
@@ -94,9 +90,6 @@ public class AuthServiceImplTest {
         verify(jwtService).generateAccessToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).generateRefreshToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).saveRefreshToken("refreshToken");
-        verify(userClient).createUser(any(UserRegistrationRequest.class));
-        verify(accessTokenProvider).setAccessToken("accessToken");
-        verify(accessTokenProvider).clear();
     }
 
     @Test
@@ -144,8 +137,6 @@ public class AuthServiceImplTest {
         verify(jwtService).generateAccessToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).generateRefreshToken(testUser.getUsername(), List.of("USER"));
         verify(jwtService).saveRefreshToken("refreshToken");
-        verify(accessTokenProvider).setAccessToken("accessToken");
-        verify(accessTokenProvider).clear();
     }
 
     @Test
@@ -185,8 +176,6 @@ public class AuthServiceImplTest {
         verify(jwtService).generateAccessToken(testUser.getUsername(), List.of());
         verify(jwtService).generateRefreshToken(testUser.getUsername(), List.of());
         verify(jwtService).saveRefreshToken("newRefreshToken");
-        verify(accessTokenProvider).setAccessToken("newAccessToken");
-        verify(accessTokenProvider).clear();
     }
 
     // Validate Token Tests
@@ -208,5 +197,25 @@ public class AuthServiceImplTest {
 
         assertFalse(isValid);
         verify(jwtService).isTokenValid("invalidToken");
+    }
+
+    @Test
+    void deleteUserCredential_ExistingUser_DeletesSuccessfully() {
+        when(userCredentialRepository.findById(1L)).thenReturn(Optional.of(testUser));
+
+        authService.deleteUserCredential(1L);
+
+        verify(userCredentialRepository, times(1)).deleteById(1L);
+        verify(userCredentialRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void deleteUserCredential_NonExistingUser_ThrowsException() {
+        when(userCredentialRepository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(UserCredentialNotFoundException.class, () -> authService.deleteUserCredential(2L));
+
+        verify(userCredentialRepository, never()).deleteById(any());
+        verify(userCredentialRepository, times(1)).findById(2L);
     }
 }

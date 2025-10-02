@@ -2,7 +2,6 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-# Copy the JAR file into the container
 COPY target/authservice-0.0.1-SNAPSHOT.jar app.jar
 
 COPY src/main/resources/keys /app/keys

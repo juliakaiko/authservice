@@ -27,7 +27,7 @@
 		<jjwt.version>0.11.5</jjwt.version>
 		<org.testcontainers.version>1.19.8</org.testcontainers.version>
 		<sonar.organization>juliakaiko</sonar.organization>
-		<sonar.projectKey>juliakaiko_userservice</sonar.projectKey>
+		<sonar.projectKey>juliakaiko_authservice</sonar.projectKey>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.java.binaries>target/classes</sonar.java.binaries>
 	</properties>
@@ -47,12 +47,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<!-- Feign Client -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-			<version>4.1.5</version>
 		</dependency>
 
 		<dependency>
@@ -99,7 +93,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.17.0</version> <!-- Compatible version with Spring Boot 3.2.4 -->
+			<version>2.17.0</version>
 		</dependency>
 
 		<!-- JWT -->

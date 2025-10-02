@@ -3,8 +3,10 @@ package com.mymicroservice.authservice.service;
 import com.mymicroservice.authservice.model.RefreshToken;
 import com.mymicroservice.authservice.repositiry.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +18,6 @@ import jakarta.annotation.PostConstruct;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -43,8 +43,8 @@ public class JwtService  {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private static final String PRIVATE_KEY_PATH = "keys/private.pem"; //src/main/resources/
-    private static final String PUBLIC_KEY_PATH = "keys/public.pem"; // src/main/resources/
+    private static final String PRIVATE_KEY_PATH = "keys/private.pem";
+    private static final String PUBLIC_KEY_PATH = "keys/public.pem";
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
@@ -137,14 +137,38 @@ public class JwtService  {
      * @return true if valid, false if invalid/expired
      */
     public boolean isTokenValid(String token) {
-        log.info("isTokenValid(): {}",token);
+        log.info("isTokenValid(): {}", token);
         try {
             Jwts.parserBuilder()
                     .setSigningKey(publicKey)
                     .build()
                     .parseClaimsJws(token);
+
+            Claims claims = extractAllClaims(token);
+            String username = claims.getSubject();
+            List<String> roles = claims.get("roles", List.class);
+            Date expiration = claims.getExpiration();
+
+            log.info("Token is VALID for user: {}, roles: {}, expires: {}", username, roles, expiration);
             return true;
+
+        } catch (ExpiredJwtException e) {
+            log.warn("Token EXPIRED: {}", e.getMessage());
+            return false;
+        } catch (MalformedJwtException e) {
+            log.warn("Token MALFORMED: {}", e.getMessage());
+            return false;
+        } catch (SecurityException e) {
+            log.warn("Signature validation FAILED: {}", e.getMessage());
+            return false;
+        } catch (IllegalArgumentException e) {
+            log.warn("Token is null or empty: {}", e.getMessage());
+            return false;
         } catch (JwtException e) {
+            log.warn("JWT validation FAILED: {}", e.getMessage());
+            return false;
+        } catch (Exception e) {
+            log.error("Unexpected error during token validation: {}", e.getMessage());
             return false;
         }
     }
@@ -189,34 +213,4 @@ public class JwtService  {
         }
     }
 
-
-  /*  private PrivateKey loadPrivateKey(String filepath) {
-        try {
-            String key = new String(Files.readAllBytes(Paths.get(filepath)))
-                    .replace("-----BEGIN PRIVATE KEY-----", "")
-                    .replace("-----END PRIVATE KEY-----", "")
-                    .replaceAll("\\s+", "");
-
-            byte[] keyBytes = Base64.getDecoder().decode(key);
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            return KeyFactory.getInstance("RSA").generatePrivate(spec);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load private key", e);
-        }
-    }
-
-    private PublicKey loadPublicKey(String filepath) {
-        try {
-            String key = new String(Files.readAllBytes(Paths.get(filepath)))
-                    .replace("-----BEGIN PUBLIC KEY-----", "")
-                    .replace("-----END PUBLIC KEY-----", "")
-                    .replaceAll("\\s+", "");
-
-            byte[] keyBytes = Base64.getDecoder().decode(key);
-            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-            return KeyFactory.getInstance("RSA").generatePublic(spec);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load public key", e);
-        }
-    }*/
 }

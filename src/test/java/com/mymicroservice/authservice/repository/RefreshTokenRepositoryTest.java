@@ -1,6 +1,6 @@
 package com.mymicroservice.authservice.repository;
 
-import com.mymicroservice.authservice.configuration.TestContainersConfig;
+import com.mymicroservice.authservice.configuration.AbstractContainerTest;
 import com.mymicroservice.authservice.model.RefreshToken;
 import com.mymicroservice.authservice.repositiry.RefreshTokenRepository;
 import com.mymicroservice.authservice.util.RefreshTokenGenerator;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 import java.util.NoSuchElementException;
@@ -25,10 +23,8 @@ import static org.junit.Assert.assertThrows;
 
 @Slf4j
 @DataJpaTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Disabling DataSource Replacement
-@Import(TestContainersConfig.class)
-public class RefreshTokenRepositoryTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class RefreshTokenRepositoryTest extends AbstractContainerTest {
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
@@ -69,6 +65,7 @@ public class RefreshTokenRepositoryTest {
     public void deleteByUserEmail_shouldDeleteRefreshToken() {
         refreshTokenRepository.deleteRefreshTokenByUserEmailIgnoreCase(expectedRefreshToken.getUserEmail());
         log.info("Test to delete the RefreshToken by user_email: {} " + expectedRefreshToken.getUserEmail());
+
         Optional<RefreshToken> actualRefreshToken = refreshTokenRepository.findByUserEmailIgnoreCase(
                 expectedRefreshToken.getUserEmail());
 
