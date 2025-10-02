@@ -11,5 +11,6 @@ public interface AuthService {
     AuthResponse authenticate(AuthRequest request);
     AuthResponse refreshToken(RefreshTokenRequest request);
     boolean validateToken(String token);
+    void deleteUserCredential(Long userId);
 
 }

@@ -28,13 +28,15 @@ public class SecurityConfig {
                 .addFilterBefore(gatewayAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/actuator/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**",
                                 "/auth/login",
                                 "/auth/register",
-                                "/auth/refresh"
+                                "/auth/refresh",
+                                "/api/internal/**" //An internal call
                         ).permitAll()
                         .requestMatchers("/auth/**").authenticated()  // The rest methods are available to authenticated users.
                         .anyRequest().authenticated()

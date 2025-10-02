@@ -1,6 +1,7 @@
 package com.mymicroservice.authservice.advice;
 
 import com.mymicroservice.authservice.exception.InvalidCredentialsException;
+import com.mymicroservice.authservice.exception.UserCredentialNotFoundException;
 import com.mymicroservice.authservice.util.ErrorItem;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -100,6 +101,12 @@ public class GlobalAdvice {
 
     @ExceptionHandler({UsernameNotFoundException.class})
     public ResponseEntity<ErrorItem> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UserCredentialNotFoundException.class})
+    public ResponseEntity<ErrorItem> handleUserCredentialNotFoundException(UserCredentialNotFoundException e) {
         ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

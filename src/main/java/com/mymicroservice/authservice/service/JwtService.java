@@ -3,8 +3,10 @@ package com.mymicroservice.authservice.service;
 import com.mymicroservice.authservice.model.RefreshToken;
 import com.mymicroservice.authservice.repositiry.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -135,14 +137,38 @@ public class JwtService  {
      * @return true if valid, false if invalid/expired
      */
     public boolean isTokenValid(String token) {
-        log.info("isTokenValid(): {}",token);
+        log.info("isTokenValid(): {}", token);
         try {
             Jwts.parserBuilder()
                     .setSigningKey(publicKey)
                     .build()
                     .parseClaimsJws(token);
+
+            Claims claims = extractAllClaims(token);
+            String username = claims.getSubject();
+            List<String> roles = claims.get("roles", List.class);
+            Date expiration = claims.getExpiration();
+
+            log.info("Token is VALID for user: {}, roles: {}, expires: {}", username, roles, expiration);
             return true;
+
+        } catch (ExpiredJwtException e) {
+            log.warn("Token EXPIRED: {}", e.getMessage());
+            return false;
+        } catch (MalformedJwtException e) {
+            log.warn("Token MALFORMED: {}", e.getMessage());
+            return false;
+        } catch (SecurityException e) {
+            log.warn("Signature validation FAILED: {}", e.getMessage());
+            return false;
+        } catch (IllegalArgumentException e) {
+            log.warn("Token is null or empty: {}", e.getMessage());
+            return false;
         } catch (JwtException e) {
+            log.warn("JWT validation FAILED: {}", e.getMessage());
+            return false;
+        } catch (Exception e) {
+            log.error("Unexpected error during token validation: {}", e.getMessage());
             return false;
         }
     }

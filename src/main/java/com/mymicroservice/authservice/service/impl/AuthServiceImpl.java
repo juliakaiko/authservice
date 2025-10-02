@@ -5,6 +5,7 @@ import com.mymicroservice.authservice.dto.AuthResponse;
 import com.mymicroservice.authservice.dto.RefreshTokenRequest;
 import com.mymicroservice.authservice.dto.UserRegistrationRequest;
 import com.mymicroservice.authservice.exception.InvalidCredentialsException;
+import com.mymicroservice.authservice.exception.UserCredentialNotFoundException;
 import com.mymicroservice.authservice.mapper.UserCredentialMapper;
 import com.mymicroservice.authservice.model.Role;
 import com.mymicroservice.authservice.model.UserCredential;
@@ -13,16 +14,19 @@ import com.mymicroservice.authservice.repositiry.UserCredentialRepository;
 import com.mymicroservice.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
     private final UserCredentialRepository userCredentialRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -97,4 +101,12 @@ public class AuthServiceImpl implements AuthService {
         return jwtService.isTokenValid(token);
     }
 
+    @Override
+    @Transactional
+    public void deleteUserCredential(Long userId) {
+        Optional<UserCredential> userFromDb = Optional.ofNullable(userCredentialRepository.findById(userId)
+                .orElseThrow(() -> new UserCredentialNotFoundException("UserCredential wasn't found with id " + userId)));
+        userCredentialRepository.deleteById(userId);
+        log.info("deleteUserCredential(): {}", userFromDb);
+    }
 }
