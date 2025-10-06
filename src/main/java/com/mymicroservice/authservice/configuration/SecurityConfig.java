@@ -38,7 +38,7 @@ public class SecurityConfig {
                                 "/auth/refresh",
                                 "/api/internal/**" //An internal call
                         ).permitAll()
-                        .requestMatchers("/auth/**").authenticated()  // The rest methods are available to authenticated users.
+                        .requestMatchers("/auth/validate").authenticated()  // The rest methods are available to authenticated users.
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling

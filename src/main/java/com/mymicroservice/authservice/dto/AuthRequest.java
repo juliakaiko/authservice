@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Authentication request")
 public class AuthRequest {
 
-    @Email(regexp="\\w+@\\w+\\.\\w+", message="Please provide a valid email address")
+    @Email(regexp="[\\w.]+@\\w+\\.\\w+", message="Please provide a valid email address") // [a-zA-Z0-9_] _ .
     @NotBlank(message = "Email address may not be blank")
     private String email;
 
