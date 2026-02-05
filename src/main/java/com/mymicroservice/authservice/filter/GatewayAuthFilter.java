@@ -31,7 +31,8 @@ public class GatewayAuthFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        if (path.startsWith("/auth/login") || path.startsWith("/auth/register") || path.contains("/auth/refresh")) {
+        if (path.startsWith("/auth/login") || path.startsWith("/auth/register")
+                || path.contains("/auth/refresh") || path.startsWith("/actuator")) {
             filterChain.doFilter(request, response);
             return;
         }
