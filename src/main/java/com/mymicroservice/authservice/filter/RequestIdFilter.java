@@ -25,30 +25,30 @@ public class RequestIdFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // 1. Получаем requestId из заголовка или генерируем новый
+        // 1. Getting the requestId from the header or generating a new one
         String requestId = Optional.ofNullable(request.getHeader("X-Request-Id"))
                 .orElse(UUID.randomUUID().toString());
 
-        // 2. Кладём в MDC
+        // 2. Putting in MDC
         MDC.put(REQUEST_ID, requestId);
         MDC.put("serviceName", SERVICE_NAME );
 
-        // 3. Добавляем заголовок в ответ
+        // 3. Adding a header to the response
         response.setHeader("X-Request-Id", requestId);
 
-        // Пишем в файл трассировки лог в начале запроса
+        // Writing a log to the trace file at the beginning of the request.
         log.info("{} {}",
                 request.getMethod(),
                 request.getRequestURI());
 
         try {
-            // 4. Продолжаем фильтры
+            // 4. Continue the filters
             filterChain.doFilter(request, response);
         } finally {
-            // Пишем в файл трассировки лог при RESPONSE
+            // Write the RESPONSE log to the trace file
             log.info("Response status: {}", response.getStatus());
 
-            // 6. Очищаем MDC
+            // 6. Clean up the MDC
             MDC.clear();
         }
     }

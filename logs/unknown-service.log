@@ -1,0 +1,48 @@
+{"@timestamp":"2026-02-05T14:36:30.3989774+03:00","thread_name":"main","message":"PostgreSQL URL: jdbc:postgresql://localhost:63247/testdb?loggerLevel=OFF"}
+{"@timestamp":"2026-02-05T14:36:30.4226913+03:00","thread_name":"main","message":"Starting AuthserviceApplicationTests using Java 21.0.6 with PID 20868 (started by pugac in D:\\Julia\\INNOWICE\\rootproject\\authservice)"}
+{"@timestamp":"2026-02-05T14:36:30.4246923+03:00","thread_name":"main","message":"The following 1 profile is active: \"test\""}
+{"@timestamp":"2026-02-05T14:36:35.6775761+03:00","thread_name":"main","message":"Started AuthserviceApplicationTests in 5.893 seconds (process running for 11.94)"}
+{"@timestamp":"2026-02-05T14:36:36.3465093+03:00","thread_name":"main","message":"Starting AuthControllerTest using Java 21.0.6 with PID 20868 (started by pugac in D:\\Julia\\INNOWICE\\rootproject\\authservice)"}
+{"@timestamp":"2026-02-05T14:36:36.3465093+03:00","thread_name":"main","message":"The following 1 profile is active: \"test\""}
+{"@timestamp":"2026-02-05T14:36:37.3039556+03:00","thread_name":"main","message":"Started AuthControllerTest in 0.98 seconds (process running for 13.565)"}
+{"@timestamp":"2026-02-05T14:36:37.8674003+03:00","thread_name":"main","message":"Starting InternalControllerTest using Java 21.0.6 with PID 20868 (started by pugac in D:\\Julia\\INNOWICE\\rootproject\\authservice)"}
+{"@timestamp":"2026-02-05T14:36:37.8674003+03:00","thread_name":"main","message":"The following 1 profile is active: \"test\""}
+{"@timestamp":"2026-02-05T14:36:38.3139061+03:00","thread_name":"main","message":"Started InternalControllerTest in 0.48 seconds (process running for 14.575)"}
+{"@timestamp":"2026-02-05T14:36:38.4491664+03:00","thread_name":"main","message":"PostgreSQL URL: jdbc:postgresql://localhost:63247/testdb?loggerLevel=OFF"}
+{"@timestamp":"2026-02-05T14:36:38.4501667+03:00","thread_name":"main","message":"Starting RefreshTokenRepositoryTest using Java 21.0.6 with PID 20868 (started by pugac in D:\\Julia\\INNOWICE\\rootproject\\authservice)"}
+{"@timestamp":"2026-02-05T14:36:38.4516748+03:00","thread_name":"main","message":"The following 1 profile is active: \"test\""}
+{"@timestamp":"2026-02-05T14:36:39.4256271+03:00","thread_name":"main","message":"Started RefreshTokenRepositoryTest in 1.002 seconds (process running for 15.687)"}
+{"@timestamp":"2026-02-05T14:36:40.1947813+03:00","thread_name":"main","message":"Test to delete the RefreshToken by user_email: {} test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.2782315+03:00","thread_name":"main","message":"Test to find the RefreshToken by user_email: {} test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.524798+03:00","thread_name":"main","message":"Test to find the User with email: {} test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.8928596+03:00","thread_name":"main","message":"Request to register user: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9160892+03:00","thread_name":"main","message":"Request to register user: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9160892+03:00","thread_name":"main","message":"Request to add new USER: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9379465+03:00","thread_name":"main","message":"Request to authenticate user: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9458124+03:00","thread_name":"main","message":"Request to authenticate user: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9514396+03:00","thread_name":"main","message":"Request to register user: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9519946+03:00","thread_name":"main","message":"Request to add new ADMIN: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9596225+03:00","thread_name":"main","message":"Request to authenticate user: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.960617+03:00","thread_name":"main","message":"Authentication failed for user: test@test.by"}
+{"@timestamp":"2026-02-05T14:36:40.9651705+03:00","thread_name":"main","message":"Request to validate token: invalidToken"}
+{"@timestamp":"2026-02-05T14:36:40.9707159+03:00","thread_name":"main","message":"Request to refresh token: refreshToken"}
+{"@timestamp":"2026-02-05T14:36:40.978088+03:00","thread_name":"main","message":"deleteUserCredential(): Optional[UserCredential(userId=1, name=TestName, surname=TestSurName, birthDate=2000-01-01, email=test@test.by, password=pass_test, role=USER)]"}
+{"@timestamp":"2026-02-05T14:36:40.9900273+03:00","thread_name":"main","message":"Request to validate token: validToken"}
+{"@timestamp":"2026-02-05T14:36:41.3020361+03:00","thread_name":"main","message":"deleteRefreshTokenByUserEmail(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:41.4365402+03:00","thread_name":"main","message":"generateAccessToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:41.8076659+03:00","thread_name":"main","message":"generateAccessToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:41.8891294+03:00","thread_name":"main","message":"generateAccessToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:41.8923602+03:00","thread_name":"main","message":"extractUsername(): eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuYnkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc3MDI5MTQwMSwiZXhwIjoxNzcwMjkyMzAxfQ.a0SoDe7Rt8aeCLdW7DiE6ZRSHErLYAwRza68OQpHLIHVBSMUhvR7BEiADeASSPOrOm-LOhQlHREGTwraTsKkCQyC2W7hMEQsMuBuNqQxUAC3JYb02sxqsYvXy3p1nIHtbL9GHEKAOHZjrf1WzS_EHB4-LNcNm1NvIkNLfR40ES-d1Rb6HF-Xv8S2P5rsk73L_VpCO4CmX0KzKfxUYRmftqlptFvYJwQ_afnhHKyouJbBhNV2r7zY7ND7QWneFbSmsOF_5EsjC04fy-_suBxkcvfMvsb8AHO7RDGZAzPeaG--wchSDAlLIGOk2E3zCXPH5eCUoIbvMknzo4qbKiyejw"}
+{"@timestamp":"2026-02-05T14:36:42.0398944+03:00","thread_name":"main","message":"generateRefreshToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:42.0434292+03:00","thread_name":"main","message":"saveRefreshToken(): eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuYnkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc3MDI5MTQwMiwiZXhwIjoxNzcwODk2MjAyfQ.H9x3JwZAYhEyn0VWt3-8utj6rA9EYZUYcnVJ8zAF8rcgICr6Jmbe7umQnI8tAf5k_as2WXeUOxYvakUoUVnJwhbDyLidvUWM6f8JkxpFLQB2_CXDnDDVEZ-H3LWYjYpZsmCwabn-tn9PDJjrQwh-VqMJsvNzFjIgYxsOSyo6IewKw8xcUSt65i7jV-VrX-dfU9LU8Xfsi9C4aHIkpZdepfOGHFMwTsNljA_pIKoKYMI-f9PYh_0rhW90gXQEH3VScAowdSXQQebDSOsOHpqUGv7A373O4KsoCovldiofuzL5dtLNNz_QdrfrJsLPA4fOtxfwRVnp-PCcawlO-KWZgw"}
+{"@timestamp":"2026-02-05T14:36:42.1628967+03:00","thread_name":"main","message":"isTokenValid(): invalid.token.string"}
+{"@timestamp":"2026-02-05T14:36:42.1656254+03:00","thread_name":"main","message":"Token MALFORMED: Malformed JWT JSON: �{ږ'"}
+{"@timestamp":"2026-02-05T14:36:42.3387132+03:00","thread_name":"main","message":"generateRefreshToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:42.3451148+03:00","thread_name":"main","message":"saveRefreshToken(): eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuYnkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc3MDI5MTQwMiwiZXhwIjoxNzcwODk2MjAyfQ.E-TIVxkFpySTKzQdOAsoyW4PY2ImuB7_tbaS3tLyjnGYYIdkKZlyFmhjF1HtoLbZrqKE45Gm9PkJXg_asPuoQFvQdAlwazbP4J_ILPqHkl9EGX_9J4fTES3OlvIksB80RkNDkAXdi6jeIFzPP95Y8YonIqYpwBOhopIp2Z26EPuwZYlloXHa3B2IdJeae_azgX6ryNF7LDqd767c3wALcvWOmhGneVefCPBepu5JGul-a0gTXpB1c7lnzDSBzkOOSwMqPpWt5hdRIFmrNT9TK5LWXbFX-USf5eMoBuOhqqvLdn6rW--BY_W-qCc3V2qVwTTNxc4sxGYnhLRlMb-UyQ"}
+{"@timestamp":"2026-02-05T14:36:42.4620888+03:00","thread_name":"main","message":"generateAccessToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:42.4674916+03:00","thread_name":"main","message":"extractUsername(): eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuYnkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc3MDI5MTQwMiwiZXhwIjoxNzcwMjkyMzAyfQ.2D2kJc2UygZsnblU_6KsYBwDXpphHzQn_p_RhgEIwzng8EaRX8dPKhQFn1nJj5-TY15OHnWL8CwsoZ4E1F46Q8on6EIpVe_4VAer58KvNdJA7dkqwUxHvH23-W_S9-Fiicu2Re5xEYNv7ZqoqQwl0DP01cRiAaC_lgotYMxkJWqBT4-WazPICeqPGqKuuU-jpiyLbX54vixKzjX-quvqn1CPLP5_UhuowTcuRtTejO1WB-bFWSvxlr0QJXSlsJvvuRKJ-rJkEqAWe0qIlnWq_PvvgqmDScY7TgWv58gJ32--MZvXPZq7kkoxx-VhMf_HzlcE8Xm8XoDj4Lui9uvifg"}
+{"@timestamp":"2026-02-05T14:36:42.6161693+03:00","thread_name":"main","message":"generateAccessToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:42.6191927+03:00","thread_name":"main","message":"isTokenValid(): eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuYnkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc3MDI5MTQwMiwiZXhwIjoxNzcwMjkyMzAyfQ.QwgaIfurQy1_uib1sm6xsHnDOySKPGUJlAl2uHp3psO5NyAfGNh4p1C8xemBkaWsr-UJRu-nRGOOLUUO_dvilTfDAx6NV9hADn2JSVR0DZDUZlQxHHsOXe1uL8hXOj3zSphdLUTiOCEkAUpiUr-XIhxDSzLR0-8QGUhuJItaHqw_ZL67AgK7WyB6yLiXfvemkLLvQ0tfKpBHKKUUXTQ7-vDeZqC8ZAmW1CXnux69Ll52wDnen1RKPikRYNKU1LX-FSSjTDmm2TGOFucXSVJUceEJmhcuRF7hX0S4SddaoESjZhqk1l_S7WcgpJKR188V5ZE1uCLkq3QD6x9O75xrsQ"}
+{"@timestamp":"2026-02-05T14:36:42.6243689+03:00","thread_name":"main","message":"Token is VALID for user: test@test.by, roles: [USER], expires: Thu Feb 05 14:51:42 MSK 2026"}
+{"@timestamp":"2026-02-05T14:36:42.7235585+03:00","thread_name":"main","message":"generateRefreshToken(): test@test.by"}
+{"@timestamp":"2026-02-05T14:36:42.7288902+03:00","thread_name":"main","message":"extractUsername(): eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuYnkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc3MDI5MTQwMiwiZXhwIjoxNzcwODk2MjAyfQ.ZW35H5a1BMDZSplb5CJ-cJDQaaWqSLjBBQUNq1eq-FFCMS22PjKJOETunyO9xoDuZy70IBp-q7yDqPjKzs7hxX8qKwZ0YyqgDM7DM0W8shm-bfMWmPIqUrYMXHDjv19N7rcZqB2MYkEe7ZMEt0Ezq7_WcwS-69ky0klJA64Zg0brnqfmkASfa2-QqxKy2GWqhxYcE3dhjMyr9LijrHitPu9Me3Z4tE_LmlYGirNHKc_NRW0qrsxSW0xuuAzO6Nw0WOhy9JwtPyVL9hJKCabnMLqpFR9rYvopOrvpakIKp1PLYytnB4ZdkoQ05UxpkGHyzFMDqBkAgonq3-CvgM4yKA"}
