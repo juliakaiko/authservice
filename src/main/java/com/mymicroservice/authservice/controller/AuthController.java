@@ -47,5 +47,4 @@ public class AuthController {
                                             @RequestParam String token) {
         return ResponseEntity.ok(authService.validateToken(token));
     }
-
 }

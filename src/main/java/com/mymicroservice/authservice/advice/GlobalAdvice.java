@@ -12,12 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalAdvice {
@@ -40,34 +34,20 @@ public class GlobalAdvice {
      */
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorItem> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        ErrorItem error = new ErrorItem();
-
-        Map<String, String> fieldErrors = e.getFieldErrors().stream()
-                .collect(Collectors.toMap(
-                        x -> x.getField(),
-                        x -> x.getDefaultMessage(),
-                        (msg1, msg2) -> msg1 + "; " + msg2
-                ));
-
-        error.setFieldErrors(fieldErrors);
-        error.setMessage("Validation failed");
-        error.setTimestamp(formatDate());
-        error.setUrl(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
-        error.setStatusCode(HttpStatus.BAD_REQUEST.value());
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        ErrorItem error = ErrorItem.fromMethodArgumentNotValid(e, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<ErrorItem> handleIllegalArgumentException(IllegalArgumentException e) {
-        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        ErrorItem error = ErrorItem.generateMessage(e, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 
     @ExceptionHandler({InvalidCredentialsException.class})
     public ResponseEntity<ErrorItem> handleInvalidCredentialsException(InvalidCredentialsException e) {
-        ErrorItem error = generateMessage(e, HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+        ErrorItem error = ErrorItem.generateMessage(e, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 
     /**
@@ -80,8 +60,8 @@ public class GlobalAdvice {
      */
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<ErrorItem> handleBadCredentialsException(DataIntegrityViolationException e) {
-        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        ErrorItem error = ErrorItem.generateMessage(e, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 
     /**
@@ -104,50 +84,25 @@ public class GlobalAdvice {
      */
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorItem> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        ErrorItem error = ErrorItem.generateMessage(e, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 
     @ExceptionHandler({UsernameNotFoundException.class})
     public ResponseEntity<ErrorItem> handleUsernameNotFoundException(UsernameNotFoundException e) {
-        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        ErrorItem error = ErrorItem.generateMessage(e, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 
     @ExceptionHandler({UserCredentialNotFoundException.class})
     public ResponseEntity<ErrorItem> handleUserCredentialNotFoundException(UserCredentialNotFoundException e) {
-        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        ErrorItem error = ErrorItem.generateMessage(e, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 
     @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<ErrorItem> handleEntityNotFoundException(EntityNotFoundException e) {
-        ErrorItem error = generateMessage(e, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-    /**
-     * Generates an ErrorItem object with error message, URL, status code and timestamp.
-     *
-     * @param e Exception
-     * @param status HTTP status
-     * @return ErrorItem with populated fields
-     */
-    public ErrorItem generateMessage(Exception e, HttpStatus status) {
-        ErrorItem error = new ErrorItem();
-        error.setTimestamp(formatDate());
-        error.setMessage(e.getMessage());
-        error.setUrl(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
-        error.setStatusCode(status.value());
-        return error;
-    }
-
-    /**
-     * Formats the current date and time into a string with pattern "yyyy-MM-dd HH:mm".
-     *
-     * @return formatted date-time string
-     */
-    public String formatDate() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return dateTimeFormatter.format(LocalDateTime.now());
+        ErrorItem error = ErrorItem.generateMessage(e, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(error.getStatusCode()).body(error);
     }
 }

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,7 +19,9 @@ import java.util.UUID;
 public class RequestIdFilter extends OncePerRequestFilter {
 
     private static final String REQUEST_ID = "requestId";
-    private static final String SERVICE_NAME = "authservice";
+
+    @Value("${spring.application.name}")
+    private String serviceName;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -31,7 +34,7 @@ public class RequestIdFilter extends OncePerRequestFilter {
 
         // 2. Putting in MDC
         MDC.put(REQUEST_ID, requestId);
-        MDC.put("serviceName", SERVICE_NAME );
+        MDC.put("serviceName", serviceName);
 
         // 3. Adding a header to the response
         response.setHeader("X-Request-Id", requestId);
