@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/actuator/**",
+                                "/actuator",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
@@ -38,7 +39,7 @@ public class SecurityConfig {
                                 "/auth/refresh",
                                 "/api/internal/**" //An internal call
                         ).permitAll()
-                        .requestMatchers("/auth/**").authenticated()  // The rest methods are available to authenticated users.
+                        .requestMatchers("/auth/validate").authenticated()  // The rest methods are available to authenticated users.
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling

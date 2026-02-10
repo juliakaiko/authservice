@@ -35,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public AuthResponse register(UserRegistrationRequest request) {
 
+        log.info("Request to register user: {}", request.getEmail());
+
         if (userCredentialRepository.findByEmailIgnoreCase(request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("User with this email already exists");
         }
@@ -67,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse authenticate(AuthRequest request) {
-        log.info("Request to authenticate user: {}",request.getEmail());
+        log.info("Request to authenticate user: {}", request.getEmail());
 
         UserCredential user = userCredentialRepository.findByEmailIgnoreCase(request.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Incorrect email or password"));
@@ -85,6 +87,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse refreshToken(RefreshTokenRequest request) {
+        log.info("Request to refresh token: {}", request.getRefreshToken());
+
         String username = jwtService.extractUsername(request.getRefreshToken());
         List<String> roles = jwtService.getRoles(request.getRefreshToken());
         jwtService.deleteRefreshTokenByUserEmail(username);
@@ -98,6 +102,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean validateToken(String token) {
+        log.info("Request to validate token: {}", token);
+
         return jwtService.isTokenValid(token);
     }
 
@@ -107,6 +113,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<UserCredential> userFromDb = Optional.ofNullable(userCredentialRepository.findById(userId)
                 .orElseThrow(() -> new UserCredentialNotFoundException("UserCredential wasn't found with id " + userId)));
         userCredentialRepository.deleteById(userId);
+
         log.info("deleteUserCredential(): {}", userFromDb);
     }
 }
