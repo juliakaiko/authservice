@@ -1,4 +1,4 @@
-package com.mymicroservice.authservice.repository;
+package com.mymicroservice.authservice.repository.testcontainer;
 
 import com.mymicroservice.authservice.configuration.AbstractContainerTest;
 import com.mymicroservice.authservice.model.RefreshToken;

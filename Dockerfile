@@ -1,11 +1,36 @@
+# ---------- BUILD ----------
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+
+ARG GITHUB_TOKEN
+ARG GITHUB_USERNAME
+
+ENV GITHUB_TOKEN=${GITHUB_TOKEN}
+ENV GITHUB_USERNAME=${GITHUB_USERNAME}
+
+WORKDIR /build
+
+COPY maven-settings.xml /root/.m2/settings.xml
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+# ---------- RUNTIME ----------
 FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY target/authservice-0.0.1-SNAPSHOT.jar app.jar
-
+COPY --from=build /build/target/*.jar app.jar
 COPY src/main/resources/keys /app/keys
 
 EXPOSE 8081
 
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+
+
+#FROM eclipse-temurin:21-jre
+#WORKDIR /app
+#COPY target/authservice-0.0.1-SNAPSHOT.jar app.jar
+#COPY src/main/resources/keys /app/keys
+#EXPOSE 8081
+#ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
