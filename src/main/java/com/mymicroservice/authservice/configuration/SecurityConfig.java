@@ -24,29 +24,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .addFilterBefore(gatewayAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/actuator/**",
-                                "/actuator",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/swagger-resources/**",
-                                "/v3/api-docs/**",
-                                "/auth/login",
-                                "/auth/register",
-                                "/auth/refresh",
-                                "/api/internal/**" //An internal call
-                        ).permitAll()
-                        .requestMatchers("/auth/validate").authenticated()  // The rest methods are available to authenticated users.
-                        .anyRequest().authenticated()
-                )
-                .exceptionHandling(handling -> handling
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                        .accessDeniedHandler(new CustomAccessDeniedHandler())
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .csrf(csrf -> csrf.disable())
+            .addFilterBefore(gatewayAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(
+                            "/actuator/**",
+                            "/actuator",
+                            "/swagger-ui.html",
+                            "/swagger-ui/**",
+                            "/swagger-resources/**",
+                            "/v3/api-docs/**",
+                            "/auth/login",
+                            "/auth/register",
+                            "/auth/refresh",
+                            "/api/internal/**" //An internal call
+                    ).permitAll()
+                    .requestMatchers("/auth/validate").authenticated()  // The rest methods are available to authenticated users.
+                    .anyRequest().authenticated()
+            )
+            .exceptionHandling(handling -> handling
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                    .accessDeniedHandler(new CustomAccessDeniedHandler())
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }

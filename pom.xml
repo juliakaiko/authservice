@@ -33,8 +33,23 @@
         <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
         <jackson-databind.version>2.17.0</jackson-databind.version>
         <postgresql.version>42.7.4</postgresql.version>
+        <common-filters-starter.version>1.0.1</common-filters-starter.version>
 	</properties>
+
+    <repositories>
+        <repository>
+            <id>github-filter</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/juliakaiko/common-filters-spring-boot-starter</url>
+        </repository>
+    </repositories>
+
 	<dependencies>
+        <dependency>
+            <groupId>com.mymicroservice</groupId>
+            <artifactId>common-filters-starter</artifactId>
+            <version>${common-filters-starter.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -54,6 +69,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
