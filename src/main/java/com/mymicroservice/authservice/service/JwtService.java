@@ -24,6 +24,7 @@ import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
@@ -73,22 +74,24 @@ public class JwtService  {
 
     public String generateAccessToken(String username, List<String> roles) {
         log.info("generateAccessToken(): {}",username);
+        Instant now = Instant.now();
         return Jwts.builder()
                 .setSubject(username)
                 .claim("roles", roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration.toMillis()))
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plus(jwtExpiration)))
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
 
     public String generateRefreshToken(String username,List<String> roles) {
         log.info("generateRefreshToken(): {}",username);
+        Instant now = Instant.now();
         return Jwts.builder()
                 .setSubject(username)
                 .claim("roles", roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration.toMillis()))
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plus(refreshExpiration)))
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }

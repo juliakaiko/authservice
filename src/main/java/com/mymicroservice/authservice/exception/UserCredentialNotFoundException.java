@@ -1,8 +1,6 @@
 package com.mymicroservice.authservice.exception;
 
-import jakarta.persistence.EntityNotFoundException;
-
-public class UserCredentialNotFoundException extends EntityNotFoundException {
+public class UserCredentialNotFoundException extends RuntimeException {
 
     public UserCredentialNotFoundException(String message) {
         super(message);

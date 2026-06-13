@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,6 +68,6 @@ public class ErrorItem {
      */
     public static String formatDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return dateTimeFormatter.format(LocalDateTime.now());
+        return dateTimeFormatter.format(LocalDateTime.now(ZoneId.of("UTC")));
     }
 }

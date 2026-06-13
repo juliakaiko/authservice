@@ -21,6 +21,7 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -163,13 +164,16 @@ class JwtServiceTest {
     }
 
     @Test
-    void isTokenValid_ShouldReturnFalse_WhenTokenIsExpired() throws Exception {
-        var expirationField = JwtService.class.getDeclaredField("jwtExpiration");
-        expirationField.setAccessible(true);
-        expirationField.set(jwtService, Duration.ofMillis(1));
-
-        String token = jwtService.generateAccessToken(TestConstants.USER_EMAIL, List.of(Role.USER.getAuthority()));
-        Thread.sleep(5);
+    void isTokenValid_ShouldReturnFalse_WhenTokenIsExpired() {
+        Instant issuedAt = Instant.parse("2020-01-01T00:00:00Z");
+        Instant expiresAt = Instant.parse("2020-01-01T00:00:01Z");
+        String token = Jwts.builder()
+                .setSubject(TestConstants.USER_EMAIL)
+                .claim("roles", List.of(Role.USER.getAuthority()))
+                .setIssuedAt(Date.from(issuedAt))
+                .setExpiration(Date.from(expiresAt))
+                .signWith(privateKey, SignatureAlgorithm.RS256)
+                .compact();
 
         assertFalse(jwtService.isTokenValid(token));
     }
@@ -180,11 +184,12 @@ class JwtServiceTest {
         keyGen.initialize(TestConstants.RSA_KEY_SIZE);
         KeyPair otherKeyPair = keyGen.generateKeyPair();
 
+        Instant now = Instant.parse("2025-01-01T12:00:00Z");
         String foreignToken = Jwts.builder()
                 .setSubject(TestConstants.USER_EMAIL)
                 .claim("roles", List.of(Role.USER.getAuthority()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 60000))
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(60)))
                 .signWith(otherKeyPair.getPrivate(), SignatureAlgorithm.RS256)
                 .compact();
 

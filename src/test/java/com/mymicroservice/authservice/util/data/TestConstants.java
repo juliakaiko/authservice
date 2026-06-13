@@ -4,13 +4,14 @@ import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 @UtilityClass
 public class TestConstants {
 
     public static final String USER_NAME = "TestName";
     public static final String USER_SURNAME = "TestSurName";
-    public static final LocalDate USER_BIRTH_DATE = LocalDate.of(2000, 2, 2);
+    public static final LocalDate USER_BIRTH_DATE = LocalDate.of(2000, Month.FEBRUARY, 2);
     public static final String USER_EMAIL = "test@test.by";
     public static final String USER_PASSWORD = "pass_test";
 
@@ -39,8 +40,8 @@ public class TestConstants {
     public static final String INTERNAL_CALL_FALSE = "false";
 
     public static final String REFRESH_TOKEN_VALUE = "newRefreshToken";
-    public static final LocalDateTime REFRESH_TOKEN_EXPIRES_AT = LocalDateTime.of(2025, 8, 4, 22, 17, 37);
-    public static final LocalDateTime REFRESH_TOKEN_ISSUED_AT = LocalDateTime.of(2025, 8, 5, 22, 17, 37);
+    public static final LocalDateTime REFRESH_TOKEN_EXPIRES_AT = LocalDateTime.of(2025, Month.AUGUST, 4, 22, 17, 37);
+    public static final LocalDateTime REFRESH_TOKEN_ISSUED_AT = LocalDateTime.of(2025, Month.AUGUST, 5, 22, 17, 37);
 
     public static final String POSTGRES_IMAGE = "postgres:15-alpine";
     public static final String TEST_DB_NAME = "testdb";
