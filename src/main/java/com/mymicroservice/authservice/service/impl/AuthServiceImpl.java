@@ -9,18 +9,16 @@ import com.mymicroservice.authservice.exception.UserCredentialNotFoundException;
 import com.mymicroservice.authservice.mapper.UserCredentialMapper;
 import com.mymicroservice.authservice.model.Role;
 import com.mymicroservice.authservice.model.UserCredential;
-import com.mymicroservice.authservice.service.JwtService;
-import com.mymicroservice.authservice.repositiry.UserCredentialRepository;
+import com.mymicroservice.authservice.repository.UserCredentialRepository;
 import com.mymicroservice.authservice.service.AuthService;
+import com.mymicroservice.authservice.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -110,10 +108,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void deleteUserCredential(Long userId) {
-        Optional<UserCredential> userFromDb = Optional.ofNullable(userCredentialRepository.findById(userId)
-                .orElseThrow(() -> new UserCredentialNotFoundException("UserCredential wasn't found with id " + userId)));
+        UserCredential user = userCredentialRepository.findById(userId)
+                .orElseThrow(() -> new UserCredentialNotFoundException("UserCredential wasn't found with id " + userId));
+
+        jwtService.deleteRefreshTokenByUserEmail(user.getEmail());
         userCredentialRepository.deleteById(userId);
 
-        log.info("deleteUserCredential(): {}", userFromDb);
+        log.info("deleteUserCredential(): userId={}, email={}", userId, user.getEmail());
     }
 }

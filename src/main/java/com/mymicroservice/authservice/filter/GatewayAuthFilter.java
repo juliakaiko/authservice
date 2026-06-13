@@ -5,8 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,30 +19,21 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import static com.mymicroservice.authservice.util.CommonConstants.GATEWAY_SERVICE_NAME;
+import static com.mymicroservice.authservice.util.CommonConstants.INTERNAL_CALL_HEADER;
+import static com.mymicroservice.authservice.util.CommonConstants.SOURCE_SERVICE_HEADER;
+
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class GatewayAuthFilter extends OncePerRequestFilter {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String INTERNAL_CALL_HEADER = "X-Internal-Call";
-    private static final String SOURCE_SERVICE_HEADER = "X-Source-Service";
-    private static final String GATEWAY_SERVICE_NAME = "gateway";
-
-    @Value("#{'${security.public.endpoints}'.split(',')}")
-    private List<String> publicEndpoints;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        String path = request.getRequestURI();
-
-        if (publicEndpoints.stream().anyMatch(path::startsWith)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         try {
             if (isGatewayCall(request)) {
                 log.info("Request received from Gateway, processing JWT authentication");

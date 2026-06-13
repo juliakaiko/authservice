@@ -2,17 +2,19 @@ package com.mymicroservice.authservice.util;
 
 import com.mymicroservice.authservice.model.RefreshToken;
 
-import java.time.LocalDateTime;
+import static com.mymicroservice.authservice.util.data.TestConstants.REFRESH_TOKEN_EXPIRES_AT;
+import static com.mymicroservice.authservice.util.data.TestConstants.REFRESH_TOKEN_ISSUED_AT;
+import static com.mymicroservice.authservice.util.data.TestConstants.REFRESH_TOKEN_VALUE;
+import static com.mymicroservice.authservice.util.data.TestConstants.USER_EMAIL;
 
 public class RefreshTokenGenerator {
 
     public static RefreshToken generateRefreshToken() {
-
-        return  RefreshToken.builder()
-                .userEmail("test@test.by")
-                .refreshToken("newRefreshToken")
-                .expiresAt(LocalDateTime.of(2025,8,4, 22,17, 37))
-                .issuedAt(LocalDateTime.of(2025,8,5, 22,17, 37))
+        return RefreshToken.builder()
+                .userEmail(USER_EMAIL)
+                .refreshToken(REFRESH_TOKEN_VALUE)
+                .expiresAt(REFRESH_TOKEN_EXPIRES_AT)
+                .issuedAt(REFRESH_TOKEN_ISSUED_AT)
                 .build();
     }
 }

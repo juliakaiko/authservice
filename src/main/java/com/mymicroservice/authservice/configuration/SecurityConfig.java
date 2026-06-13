@@ -1,5 +1,6 @@
 package com.mymicroservice.authservice.configuration;
 
+import com.mymicroservice.authservice.filter.GatewayAuthFilter;
 import com.mymicroservice.authservice.security.CustomAccessDeniedHandler;
 import com.mymicroservice.authservice.security.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.mymicroservice.authservice.filter.GatewayAuthFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,7 +25,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .addFilterBefore(gatewayAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(gatewayAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(
                             "/actuator/**",

@@ -1,58 +1,54 @@
-package com.mymicroservice.authservice.repository.testcontainer;
+package com.mymicroservice.authservice.integration.repository;
 
 import com.mymicroservice.authservice.configuration.AbstractContainerTest;
 import com.mymicroservice.authservice.model.UserCredential;
-import com.mymicroservice.authservice.repositiry.UserCredentialRepository;
+import com.mymicroservice.authservice.repository.UserCredentialRepository;
 import com.mymicroservice.authservice.util.UserCredentialGenerator;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
+import static com.mymicroservice.authservice.util.data.TestConstants.NON_EXISTING_EMAIL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Slf4j
 @DataJpaTest
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class UserCredentialRepositoryTest extends AbstractContainerTest {
+@Testcontainers(disabledWithoutDocker = true)
+class UserCredentialRepositoryTest extends AbstractContainerTest {
 
     @Autowired
     private UserCredentialRepository userRepository;
 
-    private static UserCredential expectedUser;
-
-    @BeforeAll
-    static void setUp(){
-        expectedUser = UserCredentialGenerator.generateUser();
-    }
+    private UserCredential expectedUser;
 
     @BeforeEach
     void init() {
         userRepository.deleteAll();
-        expectedUser = userRepository.save(expectedUser);
+        expectedUser = userRepository.save(UserCredentialGenerator.generateUser());
     }
 
     @Test
-    void findByEmail_shouldReturnUserWhenExists() {
+    void findByEmailIgnoreCase_ShouldReturnUser_WhenEmailExists() {
         Optional<UserCredential> actualUser = userRepository.findByEmailIgnoreCase(expectedUser.getEmail());
-        log.info("Test to find the User with email: {} "+expectedUser.getEmail());
 
-        assertNotNull(actualUser.get());
+        assertNotNull(actualUser.orElse(null));
         assertEquals(expectedUser, actualUser.get());
         assertThat(actualUser).isPresent().contains(expectedUser);
     }
 
     @Test
-    public void findByEmail_shouldReturnEmptyWhenNotExists() {
-        Optional<UserCredential> actualUser = userRepository.findByEmailIgnoreCase("non-existing-email");
+    void findByEmailIgnoreCase_ShouldReturnEmpty_WhenEmailNotExists() {
+        Optional<UserCredential> actualUser = userRepository.findByEmailIgnoreCase(NON_EXISTING_EMAIL);
 
         assertFalse(actualUser.isPresent());
     }

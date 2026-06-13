@@ -1,5 +1,6 @@
 package com.mymicroservice.authservice.configuration;
 
+import com.mymicroservice.authservice.util.data.TestConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -10,15 +11,19 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
 
+import static com.mymicroservice.authservice.util.data.TestConstants.TEST_DB_NAME;
+import static com.mymicroservice.authservice.util.data.TestConstants.TEST_DB_PASSWORD;
+import static com.mymicroservice.authservice.util.data.TestConstants.TEST_DB_USER;
+
 @Testcontainers(disabledWithoutDocker = true)
 @ActiveProfiles("test")
 @Slf4j
 public abstract class AbstractContainerTest {
 
-    public static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15-alpine") //postgres:15
-            .withDatabaseName("testdb")
-            .withUsername("user")
-            .withPassword("password")
+    public static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(TestConstants.POSTGRES_IMAGE)
+            .withDatabaseName(TEST_DB_NAME)
+            .withUsername(TEST_DB_USER)
+            .withPassword(TEST_DB_PASSWORD)
             .waitingFor(Wait.forListeningPort()
                     .withStartupTimeout(Duration.ofSeconds(120))
             );
