@@ -42,6 +42,6 @@ public class UserRegistrationRequest implements Serializable {
     @Size(min=5, max=255, message = "Password size must be between 5 and 255")
     private String password;
 
-    @NotNull
+    /** Optional; defaults to USER when omitted. */
     private Role role;
 }

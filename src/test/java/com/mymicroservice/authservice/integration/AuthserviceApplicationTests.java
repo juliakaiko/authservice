@@ -1,4 +1,4 @@
-package com.mymicroservice.authservice;
+package com.mymicroservice.authservice.integration;
 
 import com.mymicroservice.authservice.configuration.AbstractContainerTest;
 import org.junit.jupiter.api.Test;
@@ -7,10 +7,9 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class AuthserviceApplicationTests extends AbstractContainerTest{
+class AuthserviceApplicationTests extends AbstractContainerTest {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads_ShouldStartApplicationContext_WhenTestProfileActive() {
+    }
 }

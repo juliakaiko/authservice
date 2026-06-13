@@ -30,6 +30,7 @@
 		<sonar.projectKey>juliakaiko_authservice</sonar.projectKey>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.java.binaries>target/classes</sonar.java.binaries>
+        <jacoco.agent.argLine></jacoco.agent.argLine>
         <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
         <jackson-databind.version>2.17.0</jackson-databind.version>
         <postgresql.version>42.7.4</postgresql.version>
@@ -249,9 +250,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.2.5</version>
 				<configuration>
-					<argLine>
-						-Dorg.testcontainers.dockerclient.strategy=org.testcontainers.dockerclient.UnixSocketClientProviderStrategy
-					</argLine>
+					<argLine>@{jacoco.agent.argLine} -Dorg.testcontainers.dockerclient.strategy=org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy</argLine>
 					<systemPropertyVariables>
 						<spring.profiles.active>test</spring.profiles.active>
 					</systemPropertyVariables>
@@ -261,6 +260,30 @@
 					<runOrder>filesystem</runOrder>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>jacoco.agent.argLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <!-- Generates an XML report after test execution -->
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 

@@ -1,10 +1,11 @@
-package com.mymicroservice.authservice.controller;
+package com.mymicroservice.authservice.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mymicroservice.authservice.configuration.SecurityConfig;
+import com.mymicroservice.authservice.controller.InternalController;
 import com.mymicroservice.authservice.filter.GatewayAuthFilter;
 import com.mymicroservice.authservice.service.AuthService;
-import org.junit.jupiter.api.DisplayName;
+import com.mymicroservice.authservice.util.data.TestConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(InternalController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @Import(SecurityConfig.class)
-public class InternalControllerTest {
+class InternalControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,37 +40,28 @@ public class InternalControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("DELETE /api/internal/auth/user/{id} should delete user when internal call header is present")
-    void deleteUserInternalCallShouldSucceed() throws Exception {
-        Long userId = 1L;
+    void deleteUser_ShouldSucceed_WhenInternalCallHeaderIsPresent() throws Exception {
+        doNothing().when(authService).deleteUserCredential(TestConstants.USER_ID);
 
-        doNothing().when(authService).deleteUserCredential(userId);
-
-        mockMvc.perform(delete("/api/internal/auth/user/{id}", userId)
-                        .header("X-Internal-Call", "true"))
+        mockMvc.perform(delete("/api/internal/auth/user/{id}", TestConstants.USER_ID)
+                        .header(TestConstants.INTERNAL_CALL_HEADER, TestConstants.INTERNAL_CALL_TRUE))
                 .andExpect(status().isNoContent());
 
-        verify(authService, times(1)).deleteUserCredential(userId);
+        verify(authService, times(1)).deleteUserCredential(TestConstants.USER_ID);
     }
 
     @Test
-    @DisplayName("DELETE /api/internal/auth/user/{id} should be forbidden without internal call header")
-    void deleteUserWithoutInternalCallShouldBeForbidden() throws Exception {
-        Long userId = 1L;
-
-        mockMvc.perform(delete("/api/internal/auth/user/{id}", userId))
+    void deleteUser_ShouldBeForbidden_WhenInternalCallHeaderIsMissing() throws Exception {
+        mockMvc.perform(delete("/api/internal/auth/user/{id}", TestConstants.USER_ID))
                 .andExpect(status().isForbidden());
 
         verify(authService, never()).deleteUserCredential(anyLong());
     }
 
     @Test
-    @DisplayName("DELETE /api/internal/auth/user/{id} should be forbidden with incorrect internal call header")
-    void deleteUserWithIncorrectInternalCallShouldBeForbidden() throws Exception {
-        Long userId = 1L;
-
-        mockMvc.perform(delete("/api/internal/auth/user/{id}", userId)
-                        .header("X-Internal-Call", "false")) // неправильное значение
+    void deleteUser_ShouldBeForbidden_WhenInternalCallHeaderIsIncorrect() throws Exception {
+        mockMvc.perform(delete("/api/internal/auth/user/{id}", TestConstants.USER_ID)
+                        .header(TestConstants.INTERNAL_CALL_HEADER, TestConstants.INTERNAL_CALL_FALSE))
                 .andExpect(status().isForbidden());
 
         verify(authService, never()).deleteUserCredential(anyLong());

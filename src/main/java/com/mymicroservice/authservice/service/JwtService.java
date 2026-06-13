@@ -1,20 +1,20 @@
 package com.mymicroservice.authservice.service;
 
 import com.mymicroservice.authservice.model.RefreshToken;
-import com.mymicroservice.authservice.repositiry.RefreshTokenRepository;
+import com.mymicroservice.authservice.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.annotation.PostConstruct;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -59,9 +59,15 @@ public class JwtService  {
         return extractAllClaims(token).get("roles", List.class);
     }
 
-    //Extract all data from a token
     public Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token)
+        return parseClaims(token);
+    }
+
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(publicKey)
+                .build()
+                .parseClaimsJws(token)
                 .getBody();
     }
 
@@ -89,12 +95,8 @@ public class JwtService  {
 
     @Transactional
     public void saveRefreshToken(String refreshToken) {
-        log.info("saveRefreshToken(): {}",refreshToken);
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .build()
-                .parseClaimsJws(refreshToken)
-                .getBody();
+        log.info("saveRefreshToken()");
+        Claims claims = parseClaims(refreshToken);
 
         String username = claims.getSubject();
         Date issuedAt = claims.getIssuedAt();
@@ -139,12 +141,7 @@ public class JwtService  {
     public boolean isTokenValid(String token) {
         log.info("isTokenValid(): {}", token);
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(publicKey)
-                    .build()
-                    .parseClaimsJws(token);
-
-            Claims claims = extractAllClaims(token);
+            Claims claims = parseClaims(token);
             String username = claims.getSubject();
             List<String> roles = claims.get("roles", List.class);
             Date expiration = claims.getExpiration();
@@ -174,13 +171,8 @@ public class JwtService  {
     }
 
     public String extractUsername(String token) {
-        log.info("extractUsername(): {}",token);
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+        log.info("extractUsername(): {}", token);
+        return parseClaims(token).getSubject();
     }
 
     private PrivateKey loadPrivateKey(String classpathPath) {
