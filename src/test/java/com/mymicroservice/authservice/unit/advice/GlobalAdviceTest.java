@@ -24,6 +24,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GlobalAdviceTest {
@@ -90,7 +92,8 @@ class GlobalAdviceTest {
 
     @Test
     void handleHttpMessageNotReadableException_ShouldReturnBadRequest_WhenBodyIsMalformed() {
-        HttpMessageNotReadableException exception = new HttpMessageNotReadableException("Malformed JSON");
+        HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
+        when(exception.getMessage()).thenReturn("Malformed JSON");
 
         ResponseEntity<ErrorItem> response = globalAdvice.handleHttpMessageNotReadableException(exception);
 
